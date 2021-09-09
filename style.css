@@ -1,0 +1,128 @@
+@charset "utf-8";
+:root{
+    --bg:#222;
+    --f-black:#222c41;
+    --f-grey:#aaa;
+    --blue:rgb(36, 167, 255);
+    --gray:#444;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{
+    display:flex;flex-flow:column wrap;
+    justify-content:center; align-items:center;
+    width:100%;height:100vh;
+    background:var(--bg);
+    color:var(--f-color);}
+
+/* 버튼 전체 영역 */
+#asBtn{
+    position:relative; overflow:hidden;
+    width:200px; height:60px;
+    background:var(--gray);
+    border-radius:60px;
+    text-align:center;color:var(--f-grey);
+    box-shadow:0px 5px 1rem rgba(0,0,0,.5);
+    cursor:pointer;
+    transition:
+        width .5s 1s linear,
+        height .5s 1s linear;}
+
+    #asBtn:hover{
+        filter:brightness(120%);}
+
+/* 다운로드, 완료 공통 */
+[id ^= "in_btn-"]{
+    display:flex;
+    justify-content:center; align-items:center;
+    position:relative; overflow:hidden;
+    width:100%;height:100%;
+    padding-bottom:.25em;
+    transition:transform .5s ease-in-out;}
+
+[id ^= "in_btn-"] span{position:relative;pointer-events:none;}
+
+    [id ^= "in_btn-"] span::before{
+        content:'';display:inline-block;position:relative;
+        width:20px;aspect-ratio:1/1;
+        transform:translateY(25%);
+        margin-right:8px;
+        background-repeat:no-repeat;
+        background-position:center center;
+        background-size:cover;
+        pointer-events:none;}
+
+    /* 다운로드 버튼 */
+    #in_btn-down{background:var(--gray);}
+    #in_btn-down span::before{
+        background-image:url(./img/download_circle.svg);}
+
+    /* 완료 버튼 */
+    #in_btn-comp{
+        background:var(--blue);
+        color:var(--f-black);
+        transition-delay:1.5s;}
+
+    #in_btn-comp span::before{
+        background-image:url(./img/check_circle.svg);}
+
+/* 진행 bar */
+#in_bar{
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:var(--blue);
+    box-shadow:0px 0px 1rem rgba(0,0,0,.5);
+    clip-path:polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);}
+
+/* 체크 아이콘 */
+#in_check{
+    display:flex;justify-content:center;align-items:center;
+    position:absolute;
+    top:0;left:0;
+    width:60px; aspect-ratio:1/1;
+    background:var(--blue);
+    transform:scale(0);}
+
+#in_check img{height:80%;width:auto;pointer-events:none;}
+
+
+/* 💞 애니메이션 */
+/* 클릭시 progressBar로 넘어갈때 */
+#asBtn.step-bar{
+    width:440px;height:10px;}
+
+    #asBtn.step-bar #in_btn-down,
+    #asBtn.step-complete #in_btn-down,
+    #asBtn.step-final #in_btn-down{
+        transform:translateY(100%);}
+
+    /* 진행바 상태일땐 */
+    .step-bar #in_bar{
+        animation:make_100percent 5s 2s ease-in-out forwards;}
+    @keyframes make_100percent {
+        to{clip-path:polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);}}
+
+/* progressBar 끝나고 Complete 버튼으로 넘어갈때 */
+#asBtn.step-complete{
+    width:200px;height:60px;
+    background:var(--blue);
+    animation:shrink .5s 4.5s ease-in-out forwards;}
+
+    @keyframes shrink {
+        to{width:60px;}}
+
+    #asBtn.step-complete #in_btn-comp{
+        transform:translateY(-100%);
+        animation:hide_btn .5s 4s ease-in-out forwards;}
+
+        @keyframes hide_btn {
+            to{transform:translateY(0);}}
+    
+    #asBtn.step-complete #in_check{
+        animation:show_check 1s 5s ease-in-out both;}
+
+        @keyframes show_check {
+            from{transform:scale(0);}
+            to{transform:scale(1);}}
